@@ -1,3 +1,6 @@
+flask
+pywebview
 cryptography
 scikit-learn
-pywebview
+numpy
+pandas
