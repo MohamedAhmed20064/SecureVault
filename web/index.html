@@ -1,0 +1,105 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>SecureVault</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<div class="bg"><i class="blob b1"></i><i class="blob b2"></i><i class="blob b3"></i></div>
+<div class="app">
+<aside class="side glass">
+  <div class="logo">Secure<span>Vault</span></div>
+  <div class="cap">Algorithms</div>
+  <nav>
+    <button class="nav" data-page="vault" data-algo="Caesar Cipher">Caesar Cipher</button>
+    <button class="nav" data-page="vault" data-algo="Vigenère Cipher">Vigenère Cipher</button>
+    <button class="nav on" data-page="vault" data-algo="AES-256-GCM">AES-256-GCM</button>
+    <button class="nav" data-page="vault" data-algo="RSA-2048">RSA-2048</button>
+    <button class="nav" data-page="vault" data-algo="SHA-256 Hash">SHA-256 Hash</button>
+    <button class="nav" data-page="verify" data-algo="Digital Signature">Digital Signature</button>
+    <div class="cap">More tools</div>
+    <button class="nav" data-page="files" data-algo="File Vault">File Vault</button>
+    <button class="nav" data-page="hybrid" data-algo="Hybrid AES + RSA">Hybrid AES + RSA</button>
+    <button class="nav" data-page="perf" data-algo="Performance">Performance</button>
+    <button class="nav" data-page="ailab" data-algo="AI Lab">AI Lab</button>
+  </nav>
+  <div class="side-b">
+    <div id="keystate" class="mu small">No RSA keys yet</div>
+    <button class="btn" id="genkeys">Generate RSA keys</button>
+    <button class="btn dim" id="savepub">Save public key…</button>
+  </div>
+</aside>
+<main class="main">
+
+<section class="page on" id="p-vault"><div class="cols">
+  <div class="col">
+    <div class="glass card"><i class="beam" id="beam"></i><h3>Message</h3>
+      <textarea id="msg" rows="5" spellcheck="false">Hi, my card is 4111 1111 1111 1111 and my ID is 29901011234567. Email me at ahmed@example.com</textarea></div>
+    <div class="glass card"><h3 id="keylbl">Password</h3><div class="row" style="align-items:center"><input id="key" type="password" autocomplete="off" spellcheck="false" style="flex:1"><button class="btn dim pw-eye" id="tKey" type="button" title="Toggle visibility">👁 Show</button></div>
+      <div id="pwm" class="pwm" hidden><div class="bar"><i id="pwbar"></i></div><div class="pwrow"><b id="pwlbl"></b><span id="pwtips" class="mu small"></span></div></div>
+      <div class="row"><button class="btn pri" id="bEnc">Encrypt</button><button class="btn" id="bDec">Decrypt</button><button class="btn" id="bHash">Hash</button><button class="btn" id="bSign">Sign</button><button class="btn amber" id="bBrute" hidden>Brute Force</button><button class="btn amber" id="bFreq" hidden>Frequency Analysis</button></div></div>
+   <div class="glass card"><h3>Output (Base64)</h3><pre id="out" class="out"></pre><div class="row"><button class="btn dim" id="bCopy">Copy Output</button><button class="btn dim" id="bSwap">↑ Move to Message</button></div><div id="status" class="status">Ready</div></div>
+    <div class="glass card" id="avCard" hidden><h3>Avalanche Effect Tester (SHA-256)</h3>
+      <input id="avMsg2" type="text" placeholder="Enter slightly modified text (e.g. change 1 letter)..." spellcheck="false">
+      <div class="row"><button class="btn pri" id="bAv">Compare Hashes</button></div>
+      <div id="avRes" class="status">Change 1 character to see ~50% bit flip.</div></div></div>
+  <div class="col">
+    <div class="glass card warn"><h3>AI Scanner · Risk <b id="risk">0</b>%</h3><div class="bar"><i id="bar"></i></div><div id="finds"></div>
+      <button class="btn amber wide" id="bMask">Mask sensitive data</button></div>
+    <div class="glass card"><h3>AI Crypto Advisor</h3><div id="advAlg" class="advAlg">—</div><p id="advWhy" class="mu">Type a message to get a recommendation.</p>
+      <button class="btn pri wide" id="bApply">Apply recommendation</button></div>
+  </div>
+</div></section>
+
+<section class="page" id="p-verify"><div class="cols2">
+  <div class="glass card"><h3>Received message</h3><textarea id="vmsg" rows="3" spellcheck="false">Transfer 500 EGP to account 1234</textarea>
+    <h3 class="gap">Signature (RSA + SHA-256)</h3><input id="sig" type="text" spellcheck="false">
+    <div class="row"><button class="btn pri" id="vVerify">Verify</button><button class="btn" id="vSign">Sign message</button><button class="btn" id="vTests">Run all tests</button></div>
+    <div id="vstatus" class="status"></div></div>
+  <div class="glass card res" id="t1"><h3>Test 1 · Original message</h3><div class="big">Not run yet</div><p class="mu">Press Run all tests.</p></div>
+  <div class="glass card res" id="t2"><h3>Test 2 · Message modified</h3><div class="big">Not run yet</div><p class="mu">Press Run all tests.</p></div>
+  <div class="glass card res" id="t3"><h3>Test 3 · Wrong key</h3><div class="big">Not run yet</div><p class="mu">Press Run all tests.</p></div>
+</div></section>
+
+<section class="page" id="p-files"><div class="stack">
+  <div class="glass card"><h3>File</h3><div id="fname" class="big2">No file selected</div><div id="finfo" class="mono mu">Supports any file: PDF, images, documents…</div>
+    <button class="btn" id="fpick">Choose file…</button><input type="file" id="finput" hidden></div>
+  <div class="glass card"><h3>Password</h3><div class="row" style="align-items:center"><input id="fpw" type="password" autocomplete="off" style="flex:1"><button class="btn dim pw-eye" id="tFpw" type="button" title="Toggle visibility">👁 Show</button></div>
+    <div class="row"><button class="btn pri" id="fEnc">Encrypt file</button><button class="btn" id="fDec">Decrypt file</button></div></div>
+  <div class="glass card"><h3>Result</h3><div id="fstatus" class="status">Ready. Encrypted files get the .svlt extension.</div></div>
+</div></section>
+
+<section class="page" id="p-hybrid"><div class="cols">
+  <div class="col">
+    <div class="glass card"><h3>Message (any length)</h3><textarea id="hmsg" rows="6" spellcheck="false"></textarea>
+      <div class="row"><button class="btn pri" id="hEnc">Hybrid encrypt</button><button class="btn" id="hDec">Hybrid decrypt</button></div></div>
+    <div class="glass card"><h3>Output (wrapped key + nonce + ciphertext)</h3><pre id="hout" class="out"></pre><div id="hstatus" class="status">Uses your RSA keys (created automatically).</div></div>
+  </div>
+  <div class="col">
+    <div class="glass card"><h3>How it works</h3><ol class="steps"><li>A random AES-256 key is generated</li><li>AES-GCM encrypts the message (any length)</li><li>RSA-2048 encrypts only the AES key</li><li>The receiver recovers the AES key with the RSA private key, then decrypts</li></ol></div>
+    <div class="glass card neonc"><h3>Why</h3><p class="mu">RSA alone is limited to about 190 bytes and is slow. AES alone needs a shared password. Together you get speed, any size, and safe key exchange.</p></div>
+  </div>
+</div></section>
+
+<section class="page" id="p-perf"><div class="stack">
+  <div class="glass card"><h3>Benchmark</h3><div class="row"><button class="btn pri" id="pRun">Run benchmark</button>
+    <button class="btn tab" data-size="1024">1 KB</button><button class="btn tab on" data-size="102400">100 KB</button><button class="btn tab" data-size="1048576">1 MB</button></div>
+    <p id="pnote" class="mu">Press Run benchmark (takes a few seconds).</p></div>
+  <div class="glass card"><h3>Time to process the selected size (ms, log scale)</h3><div id="bars"></div></div>
+  <div class="glass card"><h3>RSA-2048 (single operation)</h3><div id="prsa" class="mono">—</div></div>
+</div></section>
+
+<section class="page" id="p-ailab"><div class="stack">
+  <div class="glass card"><h3>AI Lab · measured accuracy</h3><p class="mu">Each model is tested on examples it never saw during training. Press the button to measure.</p>
+    <div class="row"><button class="btn pri" id="aiRun">Run evaluation</button></div><p id="ainote" class="mu"></p></div>
+  <div class="cols2" id="aicards" hidden>
+    <div class="glass card"><h3>Crypto Advisor · text classifier</h3><div class="big2" id="adAcc"></div><div id="adCM" class="cm"></div><div id="adErr" class="mu small"></div></div>
+    <div class="glass card"><h3>Password strength · Random Forest</h3><div class="big2" id="pwAcc"></div><div id="pwCM" class="cm"></div><div id="pwErr" class="mu small"></div></div>
+  </div>
+</div></section>
+
+</main></div>
+<script src="app.js"></script>
+</body></html>

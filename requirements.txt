@@ -1,0 +1,3 @@
+cryptography
+scikit-learn
+pywebview
